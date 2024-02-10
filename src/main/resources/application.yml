@@ -1,0 +1,32 @@
+#Database settings
+spring:
+  main.allow-circular-references: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.1.199/starter
+    username: ocr
+    password: openclassrooms123456
+  jpa:
+    hibernate:
+      ddl-auto: update
+      naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties.hibernate.dialect: org.hibernate.dialect.MySQLDialect
+
+#JWT Security
+fr.ishtamar.starter:
+  lifespan: 9999 #jwt duration in minutes
+  secret: 1117566B59812468367639792F423E4528482B4D6253A95468574B5A71347211
+  dev-url: ${server.servlet.context-path}/
+  prod-url: test.com
+  files-upload: Files-Upload
+
+#Server settings
+server:
+  port: 3001
+  servlet.context-path: /api
+
+#Logging levels
+logging:
+  level:
+    root: ERROR
+    org.springframework.boot.web.embedded.tomcat: INFO
