@@ -6,6 +6,7 @@ target/
 Files-Upload/
 doc/
 htmlReport/
+.env
 
 ### STS ###
 .apt_generated

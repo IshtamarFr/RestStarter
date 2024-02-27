@@ -1,9 +1,14 @@
+#---------------------------------------------
+#Use .gitignored .env file for private data
+#---------------------------------------------
+#---------------------------------------------
+
 #Database settings
 spring:
   main.allow-circular-references: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.1.199/starter
+    url: jdbc:mysql://192.168.1.190:40000/starter
     username: ocr
     password: openclassrooms123456
   jpa:
