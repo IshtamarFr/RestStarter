@@ -16,6 +16,18 @@ spring:
       ddl-auto: update
       naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties.hibernate.dialect: org.hibernate.dialect.MySQLDialect
+  #email settings
+  mail:
+    host: mail.ishtamar.fr
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 #JWT Security
 fr.ishtamar.starter:

@@ -8,6 +8,7 @@ import fr.ishtamar.starter.user.UserMapper;
 import fr.ishtamar.starter.security.JwtService;
 import fr.ishtamar.starter.user.UserInfoService;
 import fr.ishtamar.starter.user.UserInfoServiceImpl;
+import fr.ishtamar.starter.util.EmailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.ConstraintViolationException;
@@ -29,20 +30,28 @@ public class AuthController {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
+    private final EmailService emailService;
 
     static final String TOKEN="token";
 
-    public AuthController(UserInfoServiceImpl service, JwtService jwtService, AuthenticationManager authenticationManager, UserMapper userMapper) {
+    public AuthController(UserInfoServiceImpl service, JwtService jwtService, AuthenticationManager authenticationManager, UserMapper userMapper, EmailService emailService) {
         this.service=service;
         this.jwtService=jwtService;
         this.authenticationManager=authenticationManager;
         this.userMapper=userMapper;
+        this.emailService=emailService;
     }
 
     @Operation(hidden=true)
     @GetMapping("/welcome")
     public String welcome() {
         return "Welcome this endpoint is not secure";
+    }
+
+    @PostMapping("/sendmemail/{address}")
+    @Secured("ROLE_ADMIN")
+    public void testSendMail(@PathVariable final String address) {
+        emailService.sendSimpleMessage(address,"Test message","Sending email from this WebApp works !");
     }
 
     @Operation(summary = "register new user",responses={
