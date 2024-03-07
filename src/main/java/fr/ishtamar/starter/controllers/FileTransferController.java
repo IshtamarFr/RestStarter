@@ -1,4 +1,4 @@
-package fr.ishtamar.starter.filetransfer;
+package fr.ishtamar.starter.controllers;
 
 import fr.ishtamar.starter.exceptionhandler.EntityNotFoundException;
 import fr.ishtamar.starter.exceptionhandler.GenericNotFoundException;

@@ -11,6 +11,18 @@ spring:
       ddl-auto: update
       naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties.hibernate.dialect: org.hibernate.dialect.H2Dialect
+  #email settings
+  mail:
+    host: mail.ishtamar.fr
+    port: 587
+    username: fake@ishtamar.fr
+    password: Aa123456
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 #JWT Security
 fr.ishtamar.starter:

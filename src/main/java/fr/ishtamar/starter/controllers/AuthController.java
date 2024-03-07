@@ -1,5 +1,8 @@
-package fr.ishtamar.starter.auth;
+package fr.ishtamar.starter.controllers;
 
+import fr.ishtamar.starter.auth.AuthRequest;
+import fr.ishtamar.starter.auth.CreateUserRequest;
+import fr.ishtamar.starter.auth.ModifyUserRequest;
 import fr.ishtamar.starter.user.UserDto;
 import fr.ishtamar.starter.user.UserInfo;
 import fr.ishtamar.starter.exceptionhandler.BadCredentialsException;
