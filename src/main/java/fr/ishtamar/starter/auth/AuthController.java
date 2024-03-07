@@ -51,7 +51,7 @@ public class AuthController {
     @PostMapping("/sendmemail/{address}")
     @Secured("ROLE_ADMIN")
     public void testSendMail(@PathVariable final String address) {
-        emailService.sendSimpleMessage(address,"Test message","Sending email from this WebApp works !");
+        emailService.sendSimpleMessage(address,"Test message from Dixsite","Sending email from Dixsite WebApp works !");
     }
 
     @Operation(summary = "register new user",responses={

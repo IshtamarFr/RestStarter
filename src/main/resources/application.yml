@@ -20,7 +20,7 @@ spring:
   mail:
     host: mail.ishtamar.fr
     port: 587
-    username: ${MAIL_USERNAME}
+    username: contact@ishtamar.fr
     password: ${MAIL_PASSWORD}
     properties:
       mail:
@@ -47,3 +47,5 @@ logging:
   level:
     root: ERROR
     org.springframework.boot.web.embedded.tomcat: INFO
+  file:
+    path: logs/
