@@ -29,4 +29,5 @@ server:
 logging:
   level:
     root: ERROR
+    fr.ishtamar.starter: INFO
     org.springframework.boot.web.embedded.tomcat: INFO
