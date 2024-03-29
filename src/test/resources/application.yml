@@ -27,9 +27,9 @@ spring:
 #JWT Security
 fr.ishtamar.starter:
   lifespan: 9999 #jwt duration in minutes
-  secret: 1117566B59812468367639792F423E4528482B4D6253A95468574B5A71347211
-  dev-url: ${server.servlet.context-path}/
-  prod-url: test.com
+  secret: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA11111111111111111111111111111111
+  dev-url: http://localhost:4200
+  prod-url: https://test.ishtamar.fr
   files-upload: Tests-Upload
 
 #Server settings

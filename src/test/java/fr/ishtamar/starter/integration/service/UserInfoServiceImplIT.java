@@ -10,8 +10,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import static fr.ishtamar.starter.security.SecurityConfig.passwordEncoder;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -24,14 +24,14 @@ class UserInfoServiceImplIT {
     final static UserInfo initialUser=UserInfo.builder()
         .name("Ishta")
         .email("test@test.com")
-        .password(new BCryptPasswordEncoder().encode("123456"))
+        .password(passwordEncoder().encode("123456"))
         .roles("ROLE_USER")
         .build();
 
     final static UserInfo initialUser2=UserInfo.builder()
         .name("Tamshi")
         .email("test10@test.com")
-        .password(new BCryptPasswordEncoder().encode("Aa123456!"))
+        .password(passwordEncoder().encode("Aa123456!"))
         .roles("ROLE_USER,ROLE_ADMIN")
         .build();
 

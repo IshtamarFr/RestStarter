@@ -17,10 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static fr.ishtamar.starter.security.SecurityConfig.passwordEncoder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.Matchers.containsString;
@@ -42,14 +42,14 @@ class AuthControllerIT {
     final static UserInfo initialUser=UserInfo.builder()
             .name("Ishta")
             .email("test@test.com")
-            .password(new BCryptPasswordEncoder().encode("123456"))
+            .password(passwordEncoder().encode("123456"))
             .roles("ROLE_USER")
             .build();
 
     final static UserInfo initialUser2=UserInfo.builder()
             .name("Pal")
             .email("test17@test.com")
-            .password(new BCryptPasswordEncoder().encode("654321"))
+            .password(passwordEncoder().encode("654321"))
             .roles("ROLE_USER")
             .build();
 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmailService {
 
-    @Value("${MAIL_USERNAME}")
+    @Value("${spring.mail.username}")
     private String USERNAME;
 
     private static final Logger logger = LoggerFactory.getLogger(EmailService.class);

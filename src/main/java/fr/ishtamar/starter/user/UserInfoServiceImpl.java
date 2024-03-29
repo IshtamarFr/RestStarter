@@ -5,11 +5,11 @@ import fr.ishtamar.starter.exceptionhandler.EntityNotFoundException;
 import fr.ishtamar.starter.auth.ModifyUserRequest;
 import fr.ishtamar.starter.security.UserInfoDetails;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static fr.ishtamar.starter.security.SecurityConfig.passwordEncoder;
 
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
@@ -18,8 +18,6 @@ public class UserInfoServiceImpl implements UserInfoService {
     public UserInfoServiceImpl(UserInfoRepository repository) {
         this.repository = repository;
     }
-
-    private static final PasswordEncoder encoder=new BCryptPasswordEncoder();
 
     @Override
     public UserDetails loadUserByUsername(String username) throws EntityNotFoundException {
@@ -36,7 +34,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (userDetail.isPresent()){
             throw new BadCredentialsException();
         } else {
-            userInfo.setPassword(encoder.encode(userInfo.getPassword()));
+            userInfo.setPassword(passwordEncoder().encode(userInfo.getPassword()));
             repository.save(userInfo);
         }
     }
@@ -57,11 +55,11 @@ public class UserInfoServiceImpl implements UserInfoService {
     public UserInfo modifyUser(String username, ModifyUserRequest request) throws BadCredentialsException, EntityNotFoundException {
         UserInfo userInfo=this.getUserByUsername(username);
 
-        if(encoder.matches(request.getOldPassword(),userInfo.getPassword())) {
+        if(passwordEncoder().matches(request.getOldPassword(),userInfo.getPassword())) {
             if (request.getName() != null && !request.getName().isEmpty()) userInfo.setName(request.getName());
             if (request.getEmail() != null && !request.getEmail().isEmpty()) userInfo.setEmail(request.getEmail());
             if (request.getPassword() != null && !request.getPassword().isEmpty())
-                userInfo.setPassword(encoder.encode(request.getPassword()));
+                userInfo.setPassword(passwordEncoder().encode(request.getPassword()));
 
             try {
                 return repository.save(userInfo);

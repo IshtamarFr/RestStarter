@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static fr.ishtamar.starter.security.SecurityConfig.passwordEncoder;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -33,7 +34,7 @@ class UserControllerIT {
     final static UserInfo initialUser=UserInfo.builder()
             .name("TickleMonster")
             .email("test999@test.com")
-            .password(new BCryptPasswordEncoder().encode("Aa1234567!"))
+            .password(passwordEncoder().encode("Aa1234567!"))
             .roles("ROLE_USER")
             .build();
 
