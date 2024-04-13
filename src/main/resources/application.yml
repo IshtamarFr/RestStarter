@@ -5,7 +5,7 @@
 
 #Database settings
 spring:
-  main.allow-circular-references: true
+  main.allow-circular-references: false
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${DB_URL}
@@ -50,3 +50,4 @@ logging:
     org.springframework.boot.web.embedded.tomcat: INFO
   file:
     path: logs/
+    max-history: 5
