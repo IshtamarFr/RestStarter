@@ -1,4 +1,4 @@
-package fr.ishtamar.starter.truc;
+package fr.ishtamar.business.truc;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

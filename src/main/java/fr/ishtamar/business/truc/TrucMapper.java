@@ -1,4 +1,4 @@
-package fr.ishtamar.starter.truc;
+package fr.ishtamar.business.truc;
 
 import fr.ishtamar.starter.util.EntityMapper;
 import fr.ishtamar.starter.user.UserInfoServiceImpl;
