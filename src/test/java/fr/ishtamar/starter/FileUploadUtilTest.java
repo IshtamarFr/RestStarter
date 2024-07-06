@@ -1,4 +1,4 @@
-package fr.ishtamar.starter.unit;
+package fr.ishtamar.starter;
 
 import fr.ishtamar.starter.filetransfer.FileUploadUtil;
 import org.apache.commons.io.FileUtils;

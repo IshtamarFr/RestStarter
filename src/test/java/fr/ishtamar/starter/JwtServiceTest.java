@@ -1,4 +1,4 @@
-package fr.ishtamar.starter.unit;
+package fr.ishtamar.starter;
 
 import fr.ishtamar.starter.security.JwtService;
 import org.junit.jupiter.api.Test;
