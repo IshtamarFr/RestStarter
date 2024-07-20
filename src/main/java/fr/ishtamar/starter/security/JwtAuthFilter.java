@@ -1,5 +1,6 @@
 package fr.ishtamar.starter.security;
 
+import fr.ishtamar.starter.user.UserInfoService;
 import fr.ishtamar.starter.user.UserInfoServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -18,9 +19,9 @@ import java.io.IOException;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
-    private final UserInfoServiceImpl userDetailsService;
+    private final UserInfoService userDetailsService;
 
-    public JwtAuthFilter(JwtService jwtService, UserInfoServiceImpl userDetailsService) {
+    public JwtAuthFilter(JwtService jwtService, UserInfoService userDetailsService) {
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
     }

@@ -19,7 +19,7 @@ public class UserController {
     private final UserInfoService service;
     private final UserMapper userMapper;
 
-    public UserController(UserInfoServiceImpl service, UserMapper userMapper) {
+    public UserController(UserInfoService service, UserMapper userMapper) {
         this.service = service;
         this.userMapper = userMapper;
     }

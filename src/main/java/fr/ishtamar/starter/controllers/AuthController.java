@@ -10,7 +10,6 @@ import fr.ishtamar.starter.exceptionhandler.EntityNotFoundException;
 import fr.ishtamar.starter.user.UserMapper;
 import fr.ishtamar.starter.security.JwtService;
 import fr.ishtamar.starter.user.UserInfoService;
-import fr.ishtamar.starter.user.UserInfoServiceImpl;
 import fr.ishtamar.starter.util.EmailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,7 +36,7 @@ public class AuthController {
 
     static final String TOKEN="token";
 
-    public AuthController(UserInfoServiceImpl service, JwtService jwtService, AuthenticationManager authenticationManager, UserMapper userMapper, EmailService emailService) {
+    public AuthController(UserInfoService service, JwtService jwtService, AuthenticationManager authenticationManager, UserMapper userMapper, EmailService emailService) {
         this.service=service;
         this.jwtService=jwtService;
         this.authenticationManager=authenticationManager;
