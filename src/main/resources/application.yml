@@ -57,7 +57,7 @@ server:
 #Logging levels
 logging:
   level:
-    root: ERROR
+    root: INFO
     fr.ishtamar.starter: INFO
     org.springframework.boot.web.embedded.tomcat: INFO
   file:
