@@ -29,13 +29,13 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @Override
-    public void createUser(UserInfo userInfo) throws BadCredentialsException {
+    public UserInfo createUser(UserInfo userInfo) throws BadCredentialsException {
         Optional<UserInfo> userDetail = repository.findByEmail(userInfo.getEmail());
         if (userDetail.isPresent()){
             throw new BadCredentialsException();
         } else {
             userInfo.setPassword(passwordEncoder().encode(userInfo.getPassword()));
-            repository.save(userInfo);
+            return repository.save(userInfo);
         }
     }
 

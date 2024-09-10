@@ -36,4 +36,7 @@ public class UserInfo {
 
     @NotNull
     private String roles;
+
+    @Size(max=15)
+    private String token;
 }

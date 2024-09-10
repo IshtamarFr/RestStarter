@@ -15,8 +15,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,8 +37,6 @@ public class AuthController {
     private final UserMapper userMapper;
     private final EmailService emailService;
 
-    static final String TOKEN="token";
-
     public AuthController(UserInfoService service, JwtService jwtService, AuthenticationManager authenticationManager, UserMapper userMapper, EmailService emailService) {
         this.service=service;
         this.jwtService=jwtService;
@@ -45,6 +44,9 @@ public class AuthController {
         this.userMapper=userMapper;
         this.emailService=emailService;
     }
+
+    @Value("${fr.ishtamar.starter.register-confirmation}")
+    private boolean requireConfirmation;
 
     @Operation(hidden=true)
     @GetMapping("/welcome")
@@ -64,6 +66,9 @@ public class AuthController {
     })
     @PostMapping("/register")
     public Map<String,String> addNewUser(@Valid @RequestBody CreateUserRequest request) throws ConstraintViolationException {
+        String token;
+        Map<String,String>map=new HashMap<>();
+
         UserInfo userInfo=UserInfo.builder()
                 .name(request.getName())
                 .email(request.getEmail())
@@ -71,12 +76,20 @@ public class AuthController {
                 .roles("ROLE_USER")
                 .build();
 
-        service.createUser(userInfo);
-        Map<String,String>map=new HashMap<>();
-        map.put(TOKEN,jwtService.generateToken(userInfo.getEmail()));
+        if (requireConfirmation){
+            token= RandomStringUtils.randomAlphanumeric(15);
+            userInfo.setToken(token);
+            Long id=service.createUser(userInfo).getId();
+            map.put("info","New user successfully created. Waiting for account to be validated");
+            emailService.sendValidationLink(request.getEmail(),id,token);
+        } else {
+            service.createUser(userInfo);
+            map.put("token",jwtService.generateToken(userInfo.getEmail()));
+        }
         return map;
     }
 
+    //TODO: Ajouter le login si oui ou non le compte est déjà validé
     @Operation(summary = "logins user and returns JWT",responses={
             @ApiResponse(responseCode="200", description = "Token successfully created"),
             @ApiResponse(responseCode="404", description = "Username not found")
@@ -86,7 +99,7 @@ public class AuthController {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
         if (authentication.isAuthenticated()) {
             Map<String,String>map=new HashMap<>();
-            map.put(TOKEN,jwtService.generateToken(authRequest.getEmail()));
+            map.put("token",jwtService.generateToken(authRequest.getEmail()));
             return map;
         } else {
             throw new UsernameNotFoundException("invalid user request !");
@@ -98,7 +111,7 @@ public class AuthController {
             @ApiResponse(responseCode="403", description = "Access unauthorized")
     })
     @GetMapping("/me")
-    @Secured("ROLE_USER")
+    @PreAuthorize("hasRole('USER')")
     public UserDto userProfile(@RequestHeader(value="Authorization",required=false) String jwt) {
         return userMapper.toDto(service.getUserByUsername(jwtService.extractUsername(jwt.substring(7))));
     }
@@ -109,7 +122,7 @@ public class AuthController {
             @ApiResponse(responseCode="403", description = "Access unauthorized")
     })
     @PutMapping("/me")
-    @Secured("ROLE_USER")
+    @PreAuthorize("hasRole('USER')")
     public Map<String,String> userModifyProfile(
             @RequestHeader(value="Authorization",required=false) String jwt,
             @Valid @RequestBody ModifyUserRequest request
@@ -118,7 +131,7 @@ public class AuthController {
 
         //prepare a new JWT to show (not executed if there's an error before)
         Map<String,String>map=new HashMap<>();
-        map.put(TOKEN,jwtService.generateToken(candidate.getEmail()));
+        map.put("token",jwtService.generateToken(candidate.getEmail()));
 
         return map;
     }

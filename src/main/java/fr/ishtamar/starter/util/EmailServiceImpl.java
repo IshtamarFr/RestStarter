@@ -16,6 +16,8 @@ public class EmailServiceImpl implements EmailService {
 
     @Value("${spring.mail.username}")
     private String USERNAME;
+    @Value("${fr.ishtamar.starter.prod-url}")
+    private String BASE_URL;
 
     private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
@@ -33,5 +35,13 @@ public class EmailServiceImpl implements EmailService {
         message.setText(text);
         emailSender.send(message);
         logger.info("email sent to " + to + " from " + USERNAME);
+    }
+
+    @Override
+    public void sendValidationLink(String to, Long id, String token) {
+        sendSimpleMessage(to, "Inscription : Starter",
+                "Bienvenue sur le Starter. Pour valider votre inscription, merci de cliquer sur ce lien : "
+                        + BASE_URL+ "/#/validate?id=" + id + "&token=" + token
+        );
     }
 }

@@ -10,7 +10,7 @@ public interface UserInfoService extends UserDetailsService {
     @Override
     UserDetails loadUserByUsername(String username) throws EntityNotFoundException;
 
-    void createUser(UserInfo userInfo) throws BadCredentialsException;
+    UserInfo createUser(UserInfo userInfo) throws BadCredentialsException;
 
     UserInfo getUserByUsername(String username) throws EntityNotFoundException;
 
