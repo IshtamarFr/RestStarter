@@ -16,6 +16,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -51,7 +53,7 @@ public class AuthController {
     }
 
     @PostMapping("/sendmemail/{address}")
-    @Secured("ROLE_ADMIN")
+    @PreAuthorize("hasRole('USER')")
     public void testSendMail(@PathVariable final String address) {
         emailService.sendSimpleMessage(address,"Test message from RestStarter","Sending email from RestStarter WebApp works !");
     }

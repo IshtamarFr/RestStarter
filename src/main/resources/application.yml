@@ -23,24 +23,6 @@ spring:
           starttls:
             enable: true
 
-spring.profiles.prod:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-  jpa:
-    properties.hibernate.dialect: org.hibernate.dialect.MySQLDialect
-
-spring.profiles.dev:
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:devdb
-    username: sa
-    password: password
-  jpa:
-    properties.hibernate.dialect: org.hibernate.dialect.H2Dialect
-
 #JWT Security
 fr.ishtamar.starter:
   lifespan: 9999 #jwt duration in minutes
