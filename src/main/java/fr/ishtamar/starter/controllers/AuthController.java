@@ -3,6 +3,7 @@ package fr.ishtamar.starter.controllers;
 import fr.ishtamar.starter.auth.AuthRequest;
 import fr.ishtamar.starter.auth.CreateUserRequest;
 import fr.ishtamar.starter.auth.ModifyUserRequest;
+import fr.ishtamar.starter.exceptionhandler.GenericException;
 import fr.ishtamar.starter.user.UserDto;
 import fr.ishtamar.starter.user.UserInfo;
 import fr.ishtamar.starter.exceptionhandler.BadCredentialsException;
@@ -17,12 +18,10 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -33,14 +32,12 @@ import java.util.Map;
 public class AuthController {
     private final UserInfoService service;
     private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
     private final UserMapper userMapper;
     private final EmailService emailService;
 
     public AuthController(UserInfoService service, JwtService jwtService, AuthenticationManager authenticationManager, UserMapper userMapper, EmailService emailService) {
         this.service=service;
         this.jwtService=jwtService;
-        this.authenticationManager=authenticationManager;
         this.userMapper=userMapper;
         this.emailService=emailService;
     }
@@ -89,20 +86,39 @@ public class AuthController {
         return map;
     }
 
-    //TODO: Ajouter le login si oui ou non le compte est déjà validé
     @Operation(summary = "logins user and returns JWT",responses={
             @ApiResponse(responseCode="200", description = "Token successfully created"),
             @ApiResponse(responseCode="404", description = "Username not found")
     })
     @PostMapping("/login")
-    public Map<String,String> authenticateAndGetToken(@RequestBody AuthRequest authRequest) throws UsernameNotFoundException {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
-        if (authentication.isAuthenticated()) {
-            Map<String,String>map=new HashMap<>();
-            map.put("token",jwtService.generateToken(authRequest.getEmail()));
-            return map;
+    public Map<String,String> authenticateAndGetToken(@RequestBody @Valid AuthRequest authRequest) throws UsernameNotFoundException {
+        UserInfo user=service.getUserByUsername(authRequest.getEmail());
+        boolean isAuthenticated= BCrypt.checkpw(authRequest.getPassword(),user.getPassword());
+
+        if (requireConfirmation){
+            if (user.getToken()==null || user.getToken().length()<15) {
+                //User account is validated. We now connect him if password is OK or if the forgotten password token is correct
+                if (isAuthenticated || (user.getToken()!=null && authRequest.getPassword().equals(user.getToken()))) {
+                    Map<String, String> map = new HashMap<>();
+                    map.put("token", jwtService.generateToken(authRequest.getEmail()));
+                    user.setToken(null);
+                    service.resetUserToken(user);
+                    return map;
+                } else {
+                    throw new BadCredentialsException();
+                }
+            } else {
+                //User account is not validated. Request is denied
+                throw new GenericException("Your account has not been validated yet. Request a new link if needed");
+            }
         } else {
-            throw new UsernameNotFoundException("invalid user request !");
+            if (isAuthenticated) {
+                Map<String, String> map = new HashMap<>();
+                map.put("token", jwtService.generateToken(authRequest.getEmail()));
+                return map;
+            } else {
+                throw new UsernameNotFoundException("invalid user request !");
+            }
         }
     }
 

@@ -17,4 +17,8 @@ public interface UserInfoService extends UserDetailsService {
     UserInfo getUserById(Long id) throws EntityNotFoundException;
 
     UserInfo modifyUser(String username, ModifyUserRequest request) throws BadCredentialsException;
+
+    void validateUser(UserInfo user);
+
+    void resetUserToken(UserInfo user);
 }

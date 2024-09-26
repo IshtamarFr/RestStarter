@@ -44,4 +44,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         apiError.setMessage("This resource has not been found");
         return buildResponseEntity(apiError);
     }
+
+    @ExceptionHandler(GenericException.class)
+    protected ResponseEntity<Object> handleGeneric(GenericException ex) {
+        ApiError apiError = new ApiError(BAD_REQUEST);
+        apiError.setMessage(ex.getMessage());
+        return buildResponseEntity(apiError);
+    }
 }

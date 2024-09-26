@@ -4,6 +4,7 @@ import fr.ishtamar.starter.exceptionhandler.BadCredentialsException;
 import fr.ishtamar.starter.exceptionhandler.EntityNotFoundException;
 import fr.ishtamar.starter.auth.ModifyUserRequest;
 import fr.ishtamar.starter.security.UserInfoDetails;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.util.Optional;
 import static fr.ishtamar.starter.security.SecurityConfig.passwordEncoder;
 
 @Service
+@Slf4j
 public class UserInfoServiceImpl implements UserInfoService {
     private final UserInfoRepository repository;
 
@@ -49,6 +51,19 @@ public class UserInfoServiceImpl implements UserInfoService {
     public UserInfo getUserById(Long id) throws EntityNotFoundException {
         return repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(UserDetails.class,"id",id.toString()));
+    }
+
+    @Override
+    public void validateUser(UserInfo user) {
+        user.setToken(null);
+        repository.save(user);
+        log.info(user.getEmail() + " validated their subscription");
+    }
+
+    @Override
+    public void resetUserToken(UserInfo user) {
+        user.setToken(null);
+        repository.save(user);
     }
 
     @Override

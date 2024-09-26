@@ -34,6 +34,7 @@ fr.ishtamar.starter:
   dev-url: http://localhost:4200
   prod-url: https://test.ishtamar.fr
   files-upload: Tests-Upload
+  register-confirmation: false
 
 #Server settings
 server:
