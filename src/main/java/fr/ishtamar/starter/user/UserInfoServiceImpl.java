@@ -85,4 +85,9 @@ public class UserInfoServiceImpl implements UserInfoService {
             throw new BadCredentialsException();
         }
     }
+
+    @Override
+    public UserInfo modifyUser(UserInfo user) {
+        return repository.save(user);
+    }
 }

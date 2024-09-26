@@ -22,4 +22,10 @@ public class MockEmailServiceImpl implements EmailService{
                         + BASE_URL+ "/#/validate?id=" + id + "&token=" + token
         );
     }
+
+    @Override
+    public void sendTemporaryPassword(String to, String token) {
+        sendSimpleMessage(to,"MdP temporaire : Starter",
+                "Mot de passe temporaire (dev) : " + token);
+    }
 }

@@ -1,5 +1,6 @@
 package fr.ishtamar.starter.util;
 
+import fr.ishtamar.starter.user.UserInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +22,12 @@ public class EmailServiceImpl implements EmailService {
 
     private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
-    final private JavaMailSender emailSender;
-    public EmailServiceImpl(JavaMailSender emailSender){
-        this.emailSender=emailSender;
+    private final JavaMailSender emailService;
+    private final UserInfoService userInfoService;
+
+    public EmailServiceImpl(JavaMailSender emailService, UserInfoService userInfoService){
+        this.emailService = emailService;
+        this.userInfoService=userInfoService;
     }
 
     @Override
@@ -33,7 +37,7 @@ public class EmailServiceImpl implements EmailService {
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
-        emailSender.send(message);
+        emailService.send(message);
         logger.info("email sent to " + to + " from " + USERNAME);
     }
 
@@ -43,5 +47,19 @@ public class EmailServiceImpl implements EmailService {
                 "Bienvenue sur le Starter. Pour valider votre inscription, merci de cliquer sur ce lien : "
                         + BASE_URL+ "/#/validate?id=" + id + "&token=" + token
         );
+    }
+
+    @Override
+    public void sendTemporaryPassword(String to, String token) {
+        try {
+            userInfoService.getUserByUsername(to); //required to see if this user exists before trying to send en email
+            sendSimpleMessage(to, "Mot de passe oublié : Starter",
+                    "Bonjour, voici un mot de passe temporaire pour vous connecter sur le Starter : "
+                            + BASE_URL + " : " + token
+                            + "\n\nAttention, il n'est valable que pour une seule connexion. Pensez à modifier votre mot de passe."
+            );
+        }catch(Error e){
+            log.info("someone required temp password for {} but they don't exist", to);
+        }
     }
 }

@@ -18,6 +18,8 @@ public interface UserInfoService extends UserDetailsService {
 
     UserInfo modifyUser(String username, ModifyUserRequest request) throws BadCredentialsException;
 
+    UserInfo modifyUser(UserInfo user);
+
     void validateUser(UserInfo user);
 
     void resetUserToken(UserInfo user);

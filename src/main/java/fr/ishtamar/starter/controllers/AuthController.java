@@ -151,4 +151,58 @@ public class AuthController {
 
         return map;
     }
+
+    @Operation(summary = "new user tries to validate their account",responses={
+            @ApiResponse(responseCode="200", description = "Account is validated"),
+            @ApiResponse(responseCode="400", description = "Id-Token is invalid, or account already validated"),
+            @ApiResponse(responseCode="404", description = "User is not found")
+    })
+    @PutMapping("/validate")
+    public Map<String,String> validateNewUser(
+            @RequestParam final Long id,
+            @RequestParam final String token
+    ) throws EntityNotFoundException, BadCredentialsException,GenericException {
+        UserInfo user=service.getUserById(id);
+        if (user.getToken()!=null) {
+            if (user.getToken().equals(token)) {
+                service.validateUser(user);
+
+                Map<String, String> map = new HashMap<>();
+                map.put("token", jwtService.generateToken(user.getEmail()));
+                return map;
+            } else {
+                throw new BadCredentialsException();
+            }
+        } else {
+            throw new GenericException("This account has already been activated");
+        }
+    }
+
+    @Operation(summary = "user requires a temporary password token",responses={
+            @ApiResponse(responseCode="200", description = "token has been sent to email"),
+            @ApiResponse(responseCode="404", description = "User is not found")
+    })
+    @PostMapping("/forgotten")
+    public String forgottenPassword(
+            @RequestParam final String email,
+            @RequestParam final String language
+    ) throws EntityNotFoundException, GenericException {
+        UserInfo user=service.getUserByUsername(email);
+
+        if (user.getToken()==null || user.getToken().length()<15){
+            //User account is validated, we can serve a new temporary password
+            String token= RandomStringUtils.randomAlphanumeric(10);
+            user.setToken(token);
+            service.modifyUser(user);
+            emailService.sendTemporaryPassword(user.getEmail(),token);
+            return "A temporary password has been sent if this address exists";
+        }else {
+            //User account is not validated, we can serve a new validation link
+            String token= RandomStringUtils.randomAlphanumeric(15);
+            user.setToken(token);
+            service.modifyUser(user);
+            emailService.sendValidationLink(user.getEmail(),user.getId(),token);
+            return "A new link for validation has been sent";
+        }
+    }
 }
