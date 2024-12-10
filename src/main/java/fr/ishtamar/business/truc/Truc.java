@@ -1,5 +1,6 @@
 package fr.ishtamar.business.truc;
 
+import fr.ishtamar.starter.standard.StdEntity;
 import fr.ishtamar.starter.user.UserInfo;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Truc {
+public class Truc implements StdEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -10,18 +10,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Mapper(componentModel = "Spring")
-public abstract class TrucMapper implements EntityMapper<TrucDto, Truc> {
-
-    @Autowired
-    UserInfoServiceImpl userInfoService;
-
-    @Mappings({
-            @Mapping(target="user", expression="java(this.userInfoService.getUserById(trucDto.getUser_id()))")
-    })
-    public abstract Truc toEntity(TrucDto trucDto);
-
+public interface TrucMapper extends EntityMapper<TrucDto, Truc> {
     @Mappings({
             @Mapping(source= "truc.user.id",target="user_id")
     })
-    public abstract TrucDto toDto(Truc truc);
+    TrucDto toDto(Truc truc);
 }
